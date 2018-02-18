@@ -7,7 +7,6 @@ public class PlayerController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
 	}
 	
 	// Update is called once per frame
@@ -17,18 +16,18 @@ public class PlayerController : MonoBehaviour {
 
 	void Move () {
 		if (Input.GetKey(KeyCode.LeftArrow)) {
-			HandleMove(new Vector2 (-1.0f, 0.0f));
+			HandleMove(Vector3.left);
 		} else if (Input.GetKey(KeyCode.RightArrow)) {
-			HandleMove(new Vector2 (1.0f, 0.0f));
+			HandleMove(Vector3.right);
 		} else if (Input.GetKey(KeyCode.UpArrow)) {
-			HandleMove(new Vector2 (0.0f, 1.0f));
+			HandleMove(Vector3.up);
 		} else if (Input.GetKey(KeyCode.DownArrow)) {
-			HandleMove(new Vector2 (0.0f, -1.0f));
+			HandleMove(Vector3.down);
 		}
 	}
 
-	void HandleMove (Vector2 moveDirection) {
-		var moveVector = new Vector3 (moveDirection.x * velocity, moveDirection.y * velocity, 0.0f) * Time.deltaTime;
+	void HandleMove (Vector3 moveDirection) {
+		var moveVector = moveDirection * velocity * Time.deltaTime;
 		transform.position += moveVector;
 	}
 }
