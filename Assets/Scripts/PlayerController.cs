@@ -51,10 +51,11 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void HandleFire () {
+		const float invokeAfterTime = 0.0000001f;
 		timeToNextFire = Mathf.Clamp01(timeToNextFire - Time.deltaTime);
-		if (Input.GetKeyDown(KeyCode.Space) && timeToNextFire <= 0f) {
+		if (Input.GetKeyDown(KeyCode.Space) && timeToNextFire <= invokeAfterTime) {
 			const float repeatInvokingAfter = 1f;
-			InvokeRepeating("Fire", timeToNextFire, repeatInvokingAfter);
+			InvokeRepeating("Fire", invokeAfterTime, repeatInvokingAfter);
 			timeToNextFire = repeatInvokingAfter;
 		} else if (Input.GetKeyUp(KeyCode.Space)) {
 			CancelInvoke();
