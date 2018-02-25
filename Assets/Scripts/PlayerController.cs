@@ -4,6 +4,7 @@ using System.Collections;
 public class PlayerController : MonoBehaviour {
 
 	public float velocity;
+	public GameObject projectilePrefab;
 
 	// Defines bottom left and top right positions of movable zone of player's ship
 	private Vector3 bottomLeft;
@@ -22,27 +23,36 @@ public class PlayerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		Move ();
+		HandleMove ();
+		HandleFire ();
+
 	}
 
-	void Move () {
+	void HandleMove () {
 		if (Input.GetKey(KeyCode.LeftArrow)) {
-			HandleMove(Vector3.left);
+			Move(Vector3.left);
 		} else if (Input.GetKey(KeyCode.RightArrow)) {
-			HandleMove(Vector3.right);
+			Move(Vector3.right);
 		} else if (Input.GetKey(KeyCode.UpArrow)) {
-			HandleMove(Vector3.up);
+			Move(Vector3.up);
 		} else if (Input.GetKey(KeyCode.DownArrow)) {
-			HandleMove(Vector3.down);
+			Move(Vector3.down);
 		}
 	}
 
-	void HandleMove (Vector3 moveDirection) {
+	void Move (Vector3 moveDirection) {
 		var moveVector = moveDirection * velocity * Time.deltaTime;
 		transform.position += moveVector;
 		var pos = transform.position;
 		var clampedX = Mathf.Clamp(pos.x, bottomLeft.x, topRight.x);
 		var clampedY = Mathf.Clamp(pos.y, bottomLeft.y, topRight.y);
 		transform.position = new Vector3(clampedX, clampedY, pos.z);
+	}
+
+	void HandleFire () {
+		if (Input.GetKeyDown(KeyCode.Space)) {
+			var projectilePos = new Vector3 (transform.position.x, transform.position.y + renderer.bounds.size.y / 2);
+			Instantiate(projectilePrefab, projectilePos, Quaternion.identity);
+		}
 	}
 }
