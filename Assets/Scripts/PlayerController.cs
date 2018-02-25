@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour {
 	// Defines bottom left and top right positions of movable zone of player's ship
 	private Vector3 bottomLeft;
 	private Vector3 topRight;
+	private float timeToNextFire;
 
 	// Use this for initialization
 	void Start () {
@@ -50,9 +51,18 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void HandleFire () {
-		if (Input.GetKeyDown(KeyCode.Space)) {
-			var projectilePos = new Vector3 (transform.position.x, transform.position.y + renderer.bounds.size.y / 2);
-			Instantiate(projectilePrefab, projectilePos, Quaternion.identity);
+		timeToNextFire = Mathf.Clamp01(timeToNextFire - Time.deltaTime);
+		if (Input.GetKeyDown(KeyCode.Space) && timeToNextFire <= 0f) {
+			const float repeatInvokingAfter = 1f;
+			InvokeRepeating("Fire", timeToNextFire, repeatInvokingAfter);
+			timeToNextFire = repeatInvokingAfter;
+		} else if (Input.GetKeyUp(KeyCode.Space)) {
+			CancelInvoke();
 		}
+	}
+
+	void Fire () {
+		var projectilePos = new Vector3 (transform.position.x, transform.position.y + renderer.bounds.size.y / 2);
+		Instantiate(projectilePrefab, projectilePos, Quaternion.identity);
 	}
 }
