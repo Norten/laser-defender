@@ -5,7 +5,7 @@ public class EnemySpawner : MonoBehaviour {
 	public GameObject enemyPrefab;
 	public float width = 12f;
 	public float height = 5.5f;
-	public float velocity = 5f;
+	public float velocity = 1f;
 
 	private float minX;
 	private float maxX;
