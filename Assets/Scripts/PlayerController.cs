@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour {
 	private Vector3 bottomLeft;
 	private Vector3 topRight;
 	private float timeToNextFire;
+	private int health = 300;
 
 	// Use this for initialization
 	void Start () {
@@ -26,7 +27,7 @@ public class PlayerController : MonoBehaviour {
 	void Update () {
 		HandleMove ();
 		HandleFire ();
-
+		Debug.Log (health);
 	}
 
 	void HandleMove () {
@@ -64,6 +65,15 @@ public class PlayerController : MonoBehaviour {
 
 	void Fire () {
 		var projectilePos = new Vector3 (transform.position.x, transform.position.y + renderer.bounds.size.y / 2);
-		Instantiate(projectilePrefab, projectilePos, Quaternion.identity);
+		var projectile = Instantiate(projectilePrefab, projectilePos, Quaternion.identity) as GameObject;
+		projectile.GetComponent<Projectile> ().SetDirection (Vector2.up);
+	}
+
+	void OnTriggerEnter2D(Collider2D collider) {
+		var projectile = collider.gameObject.GetComponent<Projectile>();
+		if (projectile) {
+			health -= projectile.Damage;
+			Destroy(collider.gameObject);
+		}
 	}
 }

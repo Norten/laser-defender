@@ -3,8 +3,8 @@ using System.Collections;
 
 public class Enemy : MonoBehaviour {
 
-	public GameObject explosion;
-
+	public GameObject explosionPrefab;
+	public GameObject projectilePrefab;
 	public int health = 100;
 
 	// Use this for initialization
@@ -14,6 +14,7 @@ public class Enemy : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		Fire ();
 	}
 
 	void OnTriggerEnter2D(Collider2D collider) {
@@ -26,9 +27,18 @@ public class Enemy : MonoBehaviour {
 
 	public void Hit(int damage) {
 		health -= damage;
-		Instantiate(explosion, transform.position, Quaternion.identity);
+		Instantiate(explosionPrefab, transform.position, Quaternion.identity);
 		if (health <= 0) {
 			Destroy(gameObject);
+		}
+	}
+
+	private void Fire () {
+		if (EnemyFormation.TimeFromLastShoot > 1f && Random.value > 0.9f) {
+			var startPosition = transform.position + new Vector3(0, -1);
+			var projectile = Instantiate(projectilePrefab, startPosition, Quaternion.FromToRotation(Vector3.up, Vector3.down)) as GameObject;
+			projectile.GetComponent<Projectile>().SetDirection(-Vector2.up);
+			EnemyFormation.Fire();
 		}
 	}
 }
